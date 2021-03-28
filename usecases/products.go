@@ -1,9 +1,14 @@
 package usecases
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
+	"log"
+	"tech-test/cache"
 	"tech-test/models"
 	"tech-test/repository"
+	"time"
 )
 
 // ProductsUsecasesInterface ...
@@ -42,7 +47,33 @@ func (v Products) GetByID(id int, m *models.Product) error {
 	if id <= 0 {
 		return fmt.Errorf("usecases: id cannot be 0 or below")
 	}
-	return repository.NewProductsRepository().GetByID(id, m)
+
+	key := fmt.Sprintf("%s:%d", "PRODUCT_GETBYID", id)
+	r, err := cache.GetDB().Get(context.Background(), key).Result()
+	if err == nil {
+		err = json.Unmarshal([]byte(r), &m)
+		if err != nil {
+			log.Printf("Cannot unmarshal: %s", err.Error())
+		}
+		return nil
+	} else {
+		err = repository.NewProductsRepository().GetByID(id, m)
+		if err != nil {
+			return err
+		}
+	}
+
+	b, err := json.Marshal(m)
+	if err != nil {
+		log.Printf("Cannot marshal: %s", err.Error())
+	} else {
+		_, err = cache.GetDB().Set(context.Background(), key, string(b), time.Minute).Result()
+		if err != nil {
+			log.Printf("Cannot store to cache: %s", err.Error())
+		}
+	}
+
+	return nil
 }
 
 // GetAll ...

@@ -1,7 +1,15 @@
-FROM golang:1.16.2
+FROM golang:latest
 
-RUN mkdir /build
-WORKDIR /build
+WORKDIR /app
 
-RUN export GO111MODULE=on
-RUN go get github.com
+COPY go.mod .
+
+COPY go.sum .
+
+RUN go mod download
+
+COPY . .
+
+RUN go build
+
+CMD ["./tech-test"]

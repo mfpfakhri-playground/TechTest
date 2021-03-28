@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:13.2
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: standar123
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 1111:8080
+
+  redis:
+    image: redis:6.2.1
+    restart: always
+    ports:
+      - 6379:6379

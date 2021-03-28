@@ -1,0 +1,172 @@
+openapi: 3.0.0
+servers: []
+info:
+  description: This is Chatat Products API
+  version: "1.0.0"
+  title: Chatat Products API
+  contact:
+    email: muhammad.fakhrian@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+paths:
+  /products:
+    post:
+      tags:
+        - Create
+      summary: Add a Product
+      operationId: Create
+      description: Adds a product to the system
+      responses:
+        '201':
+          description: product created
+        '400':
+          description: 'invalid input, object invalid'
+        '409':
+          description: an existing product already exists
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Products'
+    get:
+      tags:
+        - Get All
+      summary: Get List of Products
+      operationId: GetAll
+      description: Get All Existing Products in The System
+      parameters:
+        - in: query
+          name: ID
+          description: Last ID of a Product
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: limit
+          description: Page Threshold
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Products'
+        '400':
+          description: bad input parameter
+        '500':
+          description: internal server error
+  /products/{ID}:
+    get:
+      tags:
+        - Get By ID
+      summary: Get Product By ID
+      operationId: GetByID
+      description: Get Single Existing Product
+      parameters:
+        - in: path
+          name: ID
+          required: true
+          description: ID of a Product
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Products'
+        '400':
+          description: bad input parameter
+        '404':
+          description: no data available
+    put:
+      tags:
+        - Update Product By ID
+      summary: Update Product By ID
+      operationId: UpdateByID
+      description: Update Existing Product By ID
+      parameters:
+        - in: path
+          name: ID
+          required: true
+          description: ID of a Product
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Products'
+        '400':
+          description: bad input parameter
+        '500':
+          description: internal server error
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Products'
+    delete:
+      tags:
+        - Delete Product By ID
+      summary: Delete Product By ID
+      operationId: DeleteByID
+      description: Delete Existing Product By ID
+      parameters:
+        - in: path
+          name: ID
+          required: true
+          description: ID of a Product
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: 'row affected : '
+        '404':
+          description: no data available
+components:
+  schemas:
+    Products:
+      type: object
+      required:
+        - ID
+        - Title
+        - Description
+        - Rating
+        - Image
+        - CreatedAt
+        - UpdateAt
+      properties:
+        ID:
+          type: integer
+          example: 1
+        Title:
+          type: string
+          example: 'Nasi Ayam'
+        Description:
+          type: string
+          example: 'Nasi dengan Ayam bumbu khas'
+        Rating:
+          type: integer
+          example: 9
+        Image:
+          type: string
+          example: 'https://example.id/img/nasi-ayam.jpeg'
+        CreatedAt:
+          type: string
+          example: '2020-02-01 10:56:31'
+        UpdatedAt:
+          type: string
+          example: '2020-02-01 10:58:31'

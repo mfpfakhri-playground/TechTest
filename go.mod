@@ -6,4 +6,5 @@ require (
 	github.com/go-redis/redis/v8 v8.8.0
 	github.com/gorilla/mux v1.8.0
 	github.com/lib/pq v1.10.0
+	github.com/spf13/viper v1.7.1
 )

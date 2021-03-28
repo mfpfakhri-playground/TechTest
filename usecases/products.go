@@ -31,13 +31,13 @@ func NewProductsUsecase() ProductsUsecasesInterface {
 // Create ...
 func (v Products) Create(m *models.Product) error {
 	if m.Title == "" {
-		return fmt.Errorf("usecases: title cannot be empty string")
+		return fmt.Errorf("usecases: Create: title cannot be empty string")
 	}
 	if m.Description == "" {
-		return fmt.Errorf("usecases: description cannot be empty string")
+		return fmt.Errorf("usecases: Create: description cannot be empty string")
 	}
 	if m.Image == "" {
-		return fmt.Errorf("usecases: image cannot be empty string")
+		return fmt.Errorf("usecases: Create: image cannot be empty string")
 	}
 	return repository.NewProductsRepository().Create(m)
 }
@@ -45,7 +45,7 @@ func (v Products) Create(m *models.Product) error {
 // GetByID ...
 func (v Products) GetByID(id int, m *models.Product) error {
 	if id <= 0 {
-		return fmt.Errorf("usecases: id cannot be 0 or below")
+		return fmt.Errorf("usecases: GetByID: ID cannot be 0 or below")
 	}
 
 	key := fmt.Sprintf("%s:%d", "PRODUCT_GETBYID", id)
@@ -53,7 +53,7 @@ func (v Products) GetByID(id int, m *models.Product) error {
 	if err == nil {
 		err = json.Unmarshal([]byte(r), &m)
 		if err != nil {
-			log.Printf("Cannot unmarshal: %s", err.Error())
+			log.Printf("usecases: GetByID: Cannot json unmarshal: %s", err.Error())
 		}
 		return nil
 	} else {
@@ -65,11 +65,11 @@ func (v Products) GetByID(id int, m *models.Product) error {
 
 	b, err := json.Marshal(m)
 	if err != nil {
-		log.Printf("Cannot marshal: %s", err.Error())
+		log.Printf("usecases: GetByID: Cannot json marshal: %s", err.Error())
 	} else {
 		_, err = cache.GetDB().Set(context.Background(), key, string(b), time.Minute).Result()
 		if err != nil {
-			log.Printf("Cannot store to cache: %s", err.Error())
+			log.Printf("usecases: GetByID: Cannot store to cache: %s", err.Error())
 		}
 	}
 
@@ -80,7 +80,7 @@ func (v Products) GetByID(id int, m *models.Product) error {
 func (v Products) GetAll(limit, lastID string) ([]models.Product, error) {
 	ml, err := repository.NewProductsRepository().GetAll(limit, lastID)
 	if err != nil {
-		return nil, fmt.Errorf("usecases: GetAll : %s", err.Error())
+		return nil, fmt.Errorf("usecases: GetAll: %s", err.Error())
 	}
 
 	return ml, nil
@@ -89,16 +89,16 @@ func (v Products) GetAll(limit, lastID string) ([]models.Product, error) {
 // UpdateByID ...
 func (v Products) UpdateByID(id int, m *models.Product) (int, error) {
 	if m.Title == "" {
-		return -1, fmt.Errorf("usecases: title cannot be empty string")
+		return -1, fmt.Errorf("usecases: UpdateByID: title cannot be empty string")
 	}
 	if m.Description == "" {
-		return -1, fmt.Errorf("usecases: description cannot be empty string")
+		return -1, fmt.Errorf("usecases: UpdateByID: description cannot be empty string")
 	}
 	if m.Rating == 0 {
-		return -1, fmt.Errorf("usecases: rating cannot be 0")
+		return -1, fmt.Errorf("usecases: UpdateByID: rating cannot be 0")
 	}
 	if m.Image == "" {
-		return -1, fmt.Errorf("usecases: image cannot be empty string")
+		return -1, fmt.Errorf("usecases: UpdateByID: image cannot be empty string")
 	}
 	return repository.NewProductsRepository().UpdateByID(id, m)
 }
@@ -106,7 +106,7 @@ func (v Products) UpdateByID(id int, m *models.Product) (int, error) {
 // DeleteByID ...
 func (v Products) DeleteByID(id int) (int, error) {
 	if id <= 0 {
-		return -1, fmt.Errorf("usecases: id cannot be 0 or below")
+		return -1, fmt.Errorf("usecases: DeleteByID: ID cannot be 0 or below")
 	}
 
 	return repository.NewProductsRepository().DeleteByID(id)

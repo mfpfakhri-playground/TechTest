@@ -16,7 +16,7 @@ func Initiation() *mux.Router {
 
 	// for check health purpose
 	r.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Pong!")
+		fmt.Fprint(w, "Ping!")
 	}).Methods("GET")
 
 	// Versioning API

@@ -24,11 +24,11 @@ func (c *Response) ServeJSON(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		b, err := json.Marshal(c.Body)
 		if err != nil {
-			log.Printf("helpers: could not json marshal: %s", err.Error())
+			log.Printf("helpers: cannot json marshal: %s", err.Error())
 		}
 		_, err = w.Write(b)
 		if err != nil {
-			log.Printf("helpers: could not write: %s", err.Error())
+			log.Printf("helpers: cannot write: %s", err.Error())
 		}
 	}()
 

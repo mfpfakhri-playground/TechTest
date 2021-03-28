@@ -37,7 +37,7 @@ func (v Products) Create(w http.ResponseWriter, r *http.Request) {
 
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		res.Err = fmt.Errorf("handlers: could not read request body: %s", err.Error())
+		res.Err = fmt.Errorf("handlers: cannot read request body: %s", err.Error())
 		return
 	}
 	defer r.Body.Close()
@@ -45,7 +45,7 @@ func (v Products) Create(w http.ResponseWriter, r *http.Request) {
 	var p models.Product
 	err = json.Unmarshal(b, &p)
 	if err != nil {
-		res.Err = fmt.Errorf("handlers: could not unmarshal request body to model: %s", err.Error())
+		res.Err = fmt.Errorf("handlers: cannot unmarshal request body to model: %s", err.Error())
 		return
 	}
 
@@ -68,7 +68,7 @@ func (v Products) GetByID(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		res.Err = fmt.Errorf("handlers: could not convert string to int %s", err.Error())
+		res.Err = fmt.Errorf("handlers: cannot convert string to int %s", err.Error())
 		return
 	}
 
@@ -111,13 +111,13 @@ func (v Products) UpdateByID(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		res.Err = fmt.Errorf("handlers: could not convert string to int %s", err.Error())
+		res.Err = fmt.Errorf("handlers: cannot convert string to int %s", err.Error())
 		return
 	}
 
 	b, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		res.Err = fmt.Errorf("handlers: could not read request body: %s", err.Error())
+		res.Err = fmt.Errorf("handlers: cannot read request body: %s", err.Error())
 		return
 	}
 	defer r.Body.Close()
@@ -125,7 +125,7 @@ func (v Products) UpdateByID(w http.ResponseWriter, r *http.Request) {
 	var p models.Product
 	err = json.Unmarshal(b, &p)
 	if err != nil {
-		res.Err = fmt.Errorf("handlers: could not unmarshal request body to model: %s", err.Error())
+		res.Err = fmt.Errorf("handlers: cannot unmarshal request body to model: %s", err.Error())
 		return
 	}
 
@@ -147,7 +147,7 @@ func (v Products) DeleteByID(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		res.Err = fmt.Errorf("handlers: could not convert string to int %s", err.Error())
+		res.Err = fmt.Errorf("handlers: cannot convert string to int %s", err.Error())
 		return
 	}
 	defer r.Body.Close()

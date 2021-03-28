@@ -2,10 +2,12 @@ package cache
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/go-redis/redis/v8"
 	_ "github.com/lib/pq"
+	"github.com/spf13/viper"
 )
 
 var rdb *redis.Client
@@ -23,14 +25,14 @@ func GetDB() *redis.Client {
 func createConnection() error {
 
 	redisClient := redis.NewClient(&redis.Options{
-		Addr:     "127.0.0.1:6379",
+		Addr:     fmt.Sprintf("%s:%s", viper.GetString("redis.addr"), viper.GetString("redis.port")),
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
 
 	err := redisClient.Ping(context.Background()).Err()
 	if err != nil {
-		log.Printf("could not ping postgres database: %s\n", err.Error())
+		log.Printf("cannot ping postgres database: %s\n", err.Error())
 		return err
 	}
 

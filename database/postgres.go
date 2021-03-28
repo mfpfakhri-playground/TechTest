@@ -2,10 +2,12 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"time"
 
 	_ "github.com/lib/pq"
+	"github.com/spf13/viper"
 )
 
 var dbConn *sql.DB
@@ -21,16 +23,24 @@ func Initiation() {
 // CreateConnection open new connection Postgres
 func createConnection() error {
 
-	dsn := "host=localhost port=5432 user=postgres password=standar123 dbname=tech_test sslmode=disable"
+	// dsn := "host=localhost port=5432 user=postgres password=standar123 dbname=tech_test sslmode=disable"
+	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		viper.GetString("database.host"),
+		viper.GetString("database.port"),
+		viper.GetString("database.user"),
+		viper.GetString("database.password"),
+		viper.GetString("database.dbname"),
+		viper.GetString("database.sslmode"),
+	)
 
 	dbCon, err := sql.Open("postgres", dsn)
 	if err != nil {
-		log.Printf("could not open postgres database dsn: %s\n", err.Error())
+		log.Printf("cannot open postgres database dsn: %s\n", err.Error())
 		return err
 	}
 	err = dbCon.Ping()
 	if err != nil {
-		log.Printf("could not ping postgres database: %s\n", err.Error())
+		log.Printf("cannot ping postgres database: %s\n", err.Error())
 		return err
 	}
 	log.Printf("database postgres: Connected!\n")

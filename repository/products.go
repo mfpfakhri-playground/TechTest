@@ -35,7 +35,7 @@ func (v Products) Create(m *models.Product) error {
 	statement, err := database.GetPostGresDBconn().Prepare(query)
 
 	if err != nil {
-		return fmt.Errorf("repository: could not prepare query to database: %s", err.Error())
+		return fmt.Errorf("repository: cannot prepare query to database: %s", err.Error())
 	}
 
 	defer statement.Close()
@@ -44,7 +44,7 @@ func (v Products) Create(m *models.Product) error {
 	insertedID := 0
 	err = statement.QueryRow(m.Title, m.Description, m.Rating, m.Image, now, now).Scan(&insertedID)
 	if err != nil {
-		return fmt.Errorf("repository: could not exec query to database: %s", err.Error())
+		return fmt.Errorf("repository: cannot exec query to database: %s", err.Error())
 	}
 	m.ID = insertedID // assign last inserted row id to p.ID
 
@@ -60,7 +60,7 @@ func (v Products) GetByID(id int, m *models.Product) error {
 	statement, err := database.GetPostGresDBconn().Prepare(query)
 
 	if err != nil {
-		return fmt.Errorf("repository: could not prepare query to database: %s", err.Error())
+		return fmt.Errorf("repository: cannot prepare query to database: %s", err.Error())
 	}
 
 	defer statement.Close()
@@ -74,7 +74,7 @@ func (v Products) GetByID(id int, m *models.Product) error {
 		&m.CreatedAt,
 		&m.UpdatedAt)
 	if err != nil {
-		return fmt.Errorf("repository: could not query row to database: %s", err.Error())
+		return fmt.Errorf("repository: cannot query row to database: %s", err.Error())
 	}
 
 	return nil
@@ -87,13 +87,13 @@ func (v Products) GetAll(limit, lastID string) ([]models.Product, error) {
 
 	statement, err := database.GetPostGresDBconn().Prepare(query)
 	if err != nil {
-		return nil, fmt.Errorf("repository: could not prepare query to database: %s", err.Error())
+		return nil, fmt.Errorf("repository: cannot prepare query to database: %s", err.Error())
 	}
 	defer statement.Close()
 
 	rows, err := statement.Query(lastID, limit)
 	if err != nil {
-		return nil, fmt.Errorf("repository: could not execute query to database: %s", err.Error())
+		return nil, fmt.Errorf("repository: cannot execute query to database: %s", err.Error())
 	}
 	defer rows.Close()
 
@@ -110,12 +110,12 @@ func (v Products) GetAll(limit, lastID string) ([]models.Product, error) {
 			&m.CreatedAt,
 			&m.UpdatedAt)
 		if err != nil {
-			return nil, fmt.Errorf("repository: could not scan rows: %s", err.Error())
+			return nil, fmt.Errorf("repository: cannot scan rows: %s", err.Error())
 		}
 		if updatedAt.Valid {
 			tu, err := time.Parse(time.RFC3339, updatedAt.String)
 			if err != nil {
-				return nil, fmt.Errorf("repository: could not parse update_at time: %s", err.Error())
+				return nil, fmt.Errorf("repository: cannot parse update_at time: %s", err.Error())
 			}
 			m.UpdatedAt = tu
 		}
@@ -138,18 +138,18 @@ func (v Products) UpdateByID(id int, m *models.Product) (int, error) {
 
 	statement, err := database.GetPostGresDBconn().Prepare(query)
 	if err != nil {
-		return -1, fmt.Errorf("repository: could not prepare query to database: %s", err.Error())
+		return -1, fmt.Errorf("repository: cannot prepare query to database: %s", err.Error())
 	}
 	defer statement.Close()
 
 	r, err := statement.Exec(m.Title, m.Description, m.Rating, m.Image, m.UpdatedAt, id)
 	if err != nil {
-		return -1, fmt.Errorf("repository: could not exec query to database: %s", err.Error())
+		return -1, fmt.Errorf("repository: cannot exec query to database: %s", err.Error())
 	}
 
 	idInt64, err := r.RowsAffected()
 	if err != nil {
-		return -1, fmt.Errorf("repository: could not get row affected: %s", err.Error())
+		return -1, fmt.Errorf("repository: there is no row affected: %s", err.Error())
 	}
 
 	return int(idInt64), nil
@@ -162,19 +162,19 @@ func (v Products) DeleteByID(id int) (int, error) {
 	WHERE id = $1`
 	statement, err := database.GetPostGresDBconn().Prepare(query)
 	if err != nil {
-		return -1, fmt.Errorf("repository: could not prepare query to database: %s", err.Error())
+		return -1, fmt.Errorf("repository: cannot prepare query to database: %s", err.Error())
 	}
 
 	defer statement.Close()
 
 	r, err := statement.Exec(id)
 	if err != nil {
-		return -1, fmt.Errorf("repository: could not exec query to database: %s", err.Error())
+		return -1, fmt.Errorf("repository: cannot exec query to database: %s", err.Error())
 	}
 
 	idInt64, err := r.RowsAffected()
 	if err != nil {
-		return -1, fmt.Errorf("repository: could not get row affected: %s", err.Error())
+		return -1, fmt.Errorf("repository: cannot get row affected: %s", err.Error())
 	}
 
 	return int(idInt64), nil

@@ -1,0 +1,11 @@
+database:
+  host: localhost
+  port: 5432 
+  user: postgres
+  password: standar123
+  dbname: tech_test
+  sslmode: disable
+
+redis:
+  addr: 127.0.0.1
+  port: 6379
